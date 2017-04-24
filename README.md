@@ -2,9 +2,9 @@
 
 ECMAScript proposal, specs, and reference implementation for `global.env`, a standard representation of the current build environment.
 
-Spec drafted by @milesj and @kesne.
+Spec drafted by [@milesj](https://github.com/milesj) and [@kesne](https://github.com/kesne).
 
-Requires the [global proposal](https://github.com/tc39/proposal-global) by @ljharb.
+Requires the [global proposal](https://github.com/tc39/proposal-global) by [@ljharb](https://github.com/ljharb).
 
 ## Rationale
 
@@ -32,11 +32,12 @@ We chose the name `env`, as it's short, and most programming languages, build to
 
 | Platform | `global` defined? | `global.env` available? | Current `env` detection |
 | --- | --- | --- | --- |
-| Browsers | Under `window` | Yes | |
 | Node.js | Yes | Yes | `process.env.NODE_ENV` |
 | Electron (uses Node.js) | ~ | ~ | ~ |
-| JavaScriptCore | Under `window` | Yes | |
+| JavaScriptCore (Safari) | Under `window` | Yes | |
 | ReactNative (uses JSC) | ~ | ~ | `__DEV__` |
-| V8 | Under `window` | Yes | |
+| V8 (Chrome) | Under `window` | Yes | |
+| SpiderMonkey (Firefox) | Under `window` | Yes | |
+| ChakraCore (IE/Edge) | Under `window` | Yes | |
 
 > The tilde (~) inherits from the parent.

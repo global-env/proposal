@@ -1,6 +1,6 @@
 # global.env
 
-ECMAScript proposal, specs, and reference implementation for `global.env`, a standard representation of the current runtime environment.
+Proposal, specs, and reference implementation for `global.env`, a standard representation of the current runtime environment.
 
 Spec drafted by [@milesj](https://github.com/milesj) and [@kesne](https://github.com/kesne).
 
@@ -22,7 +22,75 @@ The `global.env` property is currently undefined across all platforms. Please re
 
 ## Implementation
 
-TODO
+The `global.env` property is an object that provides the current environment as a constant flag, an `is()` method for comparison, and additional boolean shorthand properties for easy lookup.
+
+```js
+Object.defineProperty(global, 'env', {
+  configurable: false,
+  enumerable: false,
+  writable: false,
+  value: Object.freeze({
+    CURRENT: ENV_FLAG,
+    dev: (ENV_FLAG === 'development'),
+    prod: (ENV_FLAG === 'production'),
+    is(name) {
+      return (ENV_FLAG === name);
+    },
+  }),
+});
+```
+
+> `ENV_FLAG` will resolve to `"production"` in a browser, and `process.env.NODE_ENV` in Node.js.
+
+All properties on the `global.env` object are immutable and *cannot* be modified at runtime.
+
+#### `global.env.CURRENT`
+
+The current environment as a string. Defaults to `"production"`.
+
+#### `global.env.dev`
+
+A boolean flag for detecting the `development` environment. A shorthand for `global.env.is('development')`.
+
+#### `global.env.prod`
+
+A boolean flag for detecting the `production` environment. A shorthand for `global.env.is('production')`.
+
+#### `global.env.is()`
+
+A function for comparing an argument against the current environment name. Can be used for situations where the environment name is not `development` or `production`.
+
+```js
+global.env.is('staging');
+```
+
+## Usage
+
+Since the `global` object is, well, global, we can omit the `global` object path and simply use `env`. Below are a few examples of real world usage.
+
+```js
+if (env.prod) {
+  // In production
+}
+
+if (env.is('test')) {
+  // Unit testing
+}
+```
+
+We can also replace verbose `process.env` Node.js conditionals and app-specific `__DEV__` constants.
+
+```js
+// Before
+if (__DEV__) {}
+if (process.env.NODE_ENV !== 'production') {}
+if (process.env.NODE_ENV === 'development') {}
+
+// After
+if (!env.prod) {}
+if (!env.prod) {}
+if (env.dev) {}
+```
 
 ## Naming
 
@@ -41,3 +109,8 @@ We chose the name `env`, as it's short, and most programming languages, build to
 | ChakraCore (IE/Edge) | With `window` | Yes | |
 
 > The tilde (~) inherits from the parent.
+
+## TODO
+
+* How to set `global.env.CURRENT` in the browser? Should this be mutable?
+* If mutable, how do we restrict modification to the current application? And not from third-party modules?

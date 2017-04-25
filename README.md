@@ -30,9 +30,9 @@ Object.defineProperty(global, 'env', {
   enumerable: false,
   writable: false,
   value: Object.freeze({
-    CURRENT: ENV_FLAG,
-    DEV: (ENV_FLAG === 'development'),
-    PROD: (ENV_FLAG === 'production'),
+    current: ENV_FLAG,
+    development: (ENV_FLAG === 'development'),
+    production: (ENV_FLAG === 'production'),
     is(name) {
       return (ENV_FLAG === name);
     },
@@ -44,15 +44,15 @@ Object.defineProperty(global, 'env', {
 
 All properties on the `global.env` object are immutable and *cannot* be modified at runtime.
 
-#### `global.env.CURRENT`
+#### `global.env.current`
 
 The current environment as a string. Defaults to `"production"`.
 
-#### `global.env.DEV`
+#### `global.env.development`
 
 A boolean flag for detecting the `development` environment. A shorthand for `global.env.is('development')`.
 
-#### `global.env.PROD`
+#### `global.env.production`
 
 A boolean flag for detecting the `production` environment. A shorthand for `global.env.is('production')`.
 
@@ -69,7 +69,7 @@ global.env.is('staging');
 Since the `global` object is, well, global, we can omit the `global` object path and simply use `env`. Below are a few examples of real world usage.
 
 ```js
-if (env.PROD) {
+if (env.production) {
   // In production
 }
 
@@ -87,9 +87,9 @@ if (process.env.NODE_ENV !== 'production') {}
 if (process.env.NODE_ENV === 'development') {}
 
 // After
-if (!env.PROD) {}
-if (!env.PROD) {}
-if (env.DEV) {}
+if (!env.production) {}
+if (!env.production) {}
+if (env.development) {}
 ```
 
 ## Naming
@@ -112,5 +112,5 @@ We chose the name `env`, as it's short, and most programming languages, build to
 
 ## TODO
 
-* How to set `global.env.CURRENT` in the browser? Should this be mutable?
+* How to set `global.env.current` in the browser? Should this be mutable?
 * If mutable, how do we restrict modification to the current application? And not from third-party modules?
